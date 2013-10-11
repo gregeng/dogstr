@@ -1,0 +1,13 @@
+<html>
+  <body>
+    <h1>Welcome to Dogster</h1>
+
+    <p>Please enjoy browsing our dogs.</p>
+
+    <ul>
+      <% @dogs.each do |dog| %>
+      <li><a href="/dogs/<%= dog.url %>"><%= dog.name %></a></li>
+      <% end %>
+    </ul>
+  </body>
+</html>

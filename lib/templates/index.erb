@@ -5,8 +5,8 @@
     <p>Please enjoy browsing our dogs.</p>
 
     <ul>
-      <% @dogs.each do |dog| %>
-      <li><a href="/dogs/<%= dog.url %>"><%= dog.name %></a></li>
+      <% dogs.each do |dog| %>
+      <li><a href="dogs/<%= dog.url %>.html"><%= dog.name %></a></li>
       <% end %>
     </ul>
   </body>

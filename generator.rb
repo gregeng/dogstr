@@ -1,11 +1,27 @@
+require_relative './environment'
 
-# create a bunch of dogs / or load them from the database.
+# 100.times do
+#   Dog.new.tap do |d|
+#     d.name = Faker::Name.name 
+#     d.color = Faker::Lorem.word
+#     d.bio = Faker::Lorem.paragraph
+#     d.save
+#   end
+# end
 
-# define an index and a show page.
+index = ERB.new(File.open('lib/templates/index.erb').read)
+dogs = Dog.all
 
-# for each dog, we want to fill in the template with the correct
-# information.
+File.open('_site/index.html', 'w+') do |f|
+  f << index.result(binding)
+end
 
-# write those files to _site
+show = ERB.new(File.open('lib/templates/show.erb').read)
+# For each dog, first, cast the dog into instance var
 
-index_html
+dogs.each do |dog|
+  File.open("_site/dogs/#{dog.url}.html", 'w+') do |f|
+    f << show.result(binding)
+  end
+end
+

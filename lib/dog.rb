@@ -1,8 +1,5 @@
-require 'sqlite3'
-require 'pry'
-
 class Dog
-  attr_accessor :name, :color, :id
+  attr_accessor :name, :color, :id, :bio
 
   @@db = SQLite3::Database.new 'dogs.db'
 
@@ -12,11 +9,25 @@ class Dog
     Dog.new_from_db(result.first)
   end
 
+  def url
+    name.downcase.gsub(" ", "-")
+  end
+
+  def self.all
+    sql = "SELECT * FROM dogs"
+    results = @@db.execute(sql)
+
+    results.collect do |row|
+      new_from_db(row)
+    end
+  end
+
   def self.new_from_db(row)
     d = Dog.new
     d.id = row[0]
     d.name = row[1]
     d.color = row[2]
+    d.bio = row[3]
     d.saved!
     d
   end
@@ -30,8 +41,8 @@ class Dog
   end
 
   def insert
-    sql = "INSERT INTO dogs (name, color) VALUES (?,?)"
-    @@db.execute(sql, self.name, self.color)
+    sql = "INSERT INTO dogs (name, color, bio) VALUES (?,?, ?)"
+    @@db.execute(sql, self.name, self.color, self.bio)
     saved!
     find = "SELECT id FROM dogs WHERE name = ? ORDER BY id DESC LIMIT 1"
     results = @@db.execute(find, self.name)
@@ -44,8 +55,8 @@ class Dog
 
   def update
     if saved?
-      sql = "UPDATE dogs SET name = ?, color = ? WHERE id = ?"
-      @@db.execute(sql, self.name, self.color, self.id)
+      sql = "UPDATE dogs SET name = ?, color = ?, bio = ? WHERE id = ?"
+      @@db.execute(sql, self.name, self.color, self.bio, self.id)
     end
   end
 
